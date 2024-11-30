@@ -25,7 +25,7 @@
       width: 100%;
       aspect-ratio: 2 / 1;
       overflow: hidden;
-      display: flex; /* Ensures alignment */
+      display: flex;
       justify-content: center;
       align-items: center;
     }
@@ -40,7 +40,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      transition: opacity 0.4s ease-in-out;
+      transition: opacity 0.5s ease-in-out;
     }
   
     .slide.current {
@@ -89,13 +89,17 @@
     const auto = true;
     const intervalTime = 15000;
     let slideInterval;
-
+  
     // Dynamically load images
-    const imageFiles = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'];
+    let imageFiles = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg'];
+  
+    // Shuffle the images array
+    imageFiles = imageFiles.sort(() => Math.random() - 0.5);
+  
     const slides = [];
-
+  
     // Create slides dynamically
-    imageFiles.sort().forEach((file, index) => {
+    imageFiles.forEach((file, index) => {
       const slide = document.createElement('div');
       slide.className = 'slide';
       if (index === 0) slide.classList.add('current');
@@ -103,7 +107,7 @@
       slider.appendChild(slide);
       slides.push(slide);
     });
-
+  
     const nextSlide = () => {
       const current = document.querySelector('.current');
       current.classList.remove('current');
@@ -113,7 +117,7 @@
         slides[0].classList.add('current');
       }
     };
-
+  
     const prevSlide = () => {
       const current = document.querySelector('.current');
       current.classList.remove('current');
@@ -123,6 +127,28 @@
         slides[slides.length - 1].classList.add('current');
       }
     };
+  
+    nextButton.addEventListener('click', () => {
+      nextSlide();
+      if (auto) {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, intervalTime);
+      }
+    });
+  
+    prevButton.addEventListener('click', () => {
+      prevSlide();
+      if (auto) {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, intervalTime);
+      }
+    });
+  
+    if (auto) {
+      slideInterval = setInterval(nextSlide, intervalTime);
+    }
+  </script>
+
 
     nextButton.addEventListener('click', () => {
       nextSlide();
